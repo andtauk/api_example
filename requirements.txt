@@ -1,4 +1,4 @@
-Sphinx==4.4.0
+Sphinx
 sphinxcontrib-applehelp==1.0.2
 sphinxcontrib-devhelp==1.0.2
 sphinxcontrib-htmlhelp==2.0.0
@@ -48,7 +48,7 @@ wheel==0.37.1
 whichcraft==0.6.1
 whitenoise==6.0.0
 widgetsnbextension==3.5.2
-wikipedia==1.4.0
+wikipedia
 wrapt==1.12.1
 wsproto==1.0.0
 wurlitzer==3.0.2
@@ -61,7 +61,7 @@ zipp==3.7.0
 zope.event==4.5.0
 zope.interface==5.4.0
 alabaster==0.7.12
-alchemy==20.5
+alchemy
 anyio==3.5.0
 appdirs==1.4.4
 argh==0.26.2
@@ -100,7 +100,7 @@ cloudpickle==2.0.0
 clyent==1.2.1
 colorama==0.4.4
 contextlib2==0.6.0.post1
-cookiecutter==1.7.2
+cookiecutter
 cryptography==36.0.0
 cycler==0.11.0
 Cython==0.29.25
