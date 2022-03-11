@@ -1,4 +1,4 @@
-alabaster @ file:///home/ktietz/src/ci/alabaster_1611921544520/work
+alabaster
 alchemy==20.5
 anaconda-client @ file:///tmp/build/80754af9/anaconda-client_1635342557008/work
 anaconda-project @ file:///tmp/build/80754af9/anaconda-project_1637161053845/work
