@@ -1,10 +1,4 @@
-SecretStorage==3.3.1
-selenium==4.1.0
-Send2Trash==1.8.0
-setuptools==58.0.4
-simplegeneric==0.8.1
-singledispatch==3.7.0
-sip==4.19.13
+sip==6.5.1
 six==1.16.0
 sniffio==1.2.0
 snowballstemmer==2.2.0
@@ -291,3 +285,9 @@ ratelim==0.1.6
 regex==2021.11.2
 requests==2.22.0
 rope==0.22.0
+SecretStorage==3.3.1
+selenium==4.1.0
+Send2Trash==1.8.0
+setuptools==58.0.4
+simplegeneric==0.8.1
+singledispatch==3.7.0
