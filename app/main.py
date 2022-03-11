@@ -7,8 +7,8 @@ from urllib import response
 from fastapi import Depends, FastAPI, HTTPException, Response, status
 from fastapi.params import Body
 from fastapi.middleware.cors import CORSMiddleware
-from psycopg2.extras import RealDictCursor
 import psycopg2
+from psycopg2.extras import RealDictCursor
 
 try:
     from .utils import hash_password
