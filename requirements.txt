@@ -33,7 +33,7 @@ ratelim==0.1.6
 regex==2021.11.2
 requests==2.22.0
 rope==0.22.0
-Rtree==0.9.7
+Rtree==0.15.80
 ruamel-yaml-conda==0.15.100
 scikit-image==0.18.3
 scikit-learn==1.0.2
