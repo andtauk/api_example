@@ -1,4 +1,4 @@
-Rtree==0.9.7
+Rtree
 ruamel-yaml-conda==0.15.100
 scikit-image==0.18.3
 scikit-learn==1.0.2
