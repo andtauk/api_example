@@ -34,7 +34,7 @@ typing-extensions==3.10.0.2
 ujson==4.2.0
 unicodecsv==0.14.1
 Unidecode==1.2.0
-urllib3==1.26
+urllib3
 uvicorn==0.15.0
 uvloop==0.16.0
 watchdog==2.1.6
