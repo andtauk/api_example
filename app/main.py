@@ -1,26 +1,25 @@
-#
-from multiprocessing import synchronize
+# from passlib.context import CryptContext
 import time
-from typing import Optional
 from typing import List as ListType
-from urllib import response
 from fastapi import Depends, FastAPI, HTTPException, Response, status
-from fastapi.params import Body
 from fastapi.middleware.cors import CORSMiddleware
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-try:
-    from .utils import hash_password
-    from .database import get_db, SessionLocal, engine
-    from . import models
-    from .schemas import PostBase, PostCreate, Post, UserOut, UserCreate
-except:
-    from utils import hash_password
-    from database import get_db, SessionLocal, engine
-    import models
-    from schemas import PostBase, PostCreate, Post, UserOut, UserCreate
+# try:
+from .database import get_db, SessionLocal, engine
+from . import models
+from .schemas import PostBase, PostCreate, Post, UserOut, UserCreate
+# except:
+#     from utils import hash_password
+#     from database import get_db, SessionLocal, engine
+#     import models
+#     from schemas import PostBase, PostCreate, Post, UserOut, UserCreate
 
+# pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+# def hash_password(plaintext_password):
+#     return pwd_context.hash(plaintext_password)
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -185,8 +184,8 @@ def update_post(id: int, updated_post: PostCreate, db: SessionLocal = Depends(ge
 @app.post("/users", status_code=status.HTTP_201_CREATED, response_model=UserOut)
 def create_post(user: UserCreate, db: SessionLocal = Depends(get_db)):
 
-    user_password = hash_password(user.password)
-    user.password = user_password
+    # user_password = hash_password(user.password)
+    # user.password = user_password
 
     new_user = models.Users(**user.dict())  # criou um novo posto
     db.add(new_user)  # add o novo posto ao banco de dados
