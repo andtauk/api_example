@@ -40,7 +40,7 @@ app.include_router(vote.router)
 
 @app.get("/")
 def root():
-    return {"message": "Hellow World"}
+    return {"message": "Hellow"}
     
 if __name__ == "__main__":
     uvicorn.run("__main__:app", host="127.0.0.1", reload=True, port=8000)
