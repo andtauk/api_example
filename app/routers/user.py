@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List as ListType
 
 try:
-    from .. import models, schemas, oauth2, database, utils
+    from .. import models, schemas, database, utils
 except:
     import database, utils, models, schemas
 
@@ -18,7 +18,7 @@ def create_post(user: schemas.UserCreate, db: database.SessionLocal = Depends(da
     user_password = utils.hash_password(user.password)
     user.password = user_password
 
-    new_user = models.Users(**user.dict())  # criou um novo posto
+    new_user = models.User(**user.dict())  # criou um novo posto
     db.add(new_user)  # add o novo posto ao banco de dados
     db.commit()  # salva o novo posto no banco de dados
     db.refresh(new_user)  # atualiza o novo posto com os dados do banco de dados
@@ -28,14 +28,14 @@ def create_post(user: schemas.UserCreate, db: database.SessionLocal = Depends(da
 # recuperar todos os posts
 @router.get("/", response_model=ListType[schemas.UserOut])
 def root(db: database.SessionLocal = Depends(database.get_db)):
-    users = db.query(models.Users).all()
+    users = db.query(models.User).all()
     return users
 
 
 @router.get('/{id}', response_model=schemas.UserOut)
 def get_user(id: int, db: database.SessionLocal = Depends(database.get_db)):
 
-    user = db.query(models.Users).filter(models.Users.id == id).first()
+    user = db.query(models.User).filter(models.User.id == id).first()
 
     if not user:
         raise HTTPException(

@@ -1,54 +1,47 @@
+from multiprocessing import allow_connection_pickling
 import uvicorn
-import time
 from fastapi import FastAPI
-import psycopg2
-from psycopg2.extras import RealDictCursor
+from fastapi.middleware.cors import CORSMiddleware
+
 
 try:
     from .database import engine
     from . import models
-    from .routers import post, user, auth
+    from .routers import post, user, auth, vote
+    from .config import settings
     
 except:
     from database import engine
     import models
-    from routers import post, user, auth
+    from routers import post, user, auth, vote
+    from config import settings
+
+settings
     
 
-models.Base.metadata.create_all(bind=engine)
+# models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-
-while True:
-    try:
-        conn = psycopg2.connect(
-            host="localhost",
-            database="fast_api",
-            user="postgres",
-            password="postgres",
-            cursor_factory=RealDictCursor,
-        )
-        cursor = conn.cursor()
-        print("Connected to the database")
-        break
-
-    except Exception as e:
-        print("Unable to connect to the database")
-        print("Error: ", e)
-        time.sleep(2)
+origins = ["*"]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 app.include_router(post.router)
 app.include_router(user.router)
 app.include_router(auth.router)
+app.include_router(vote.router)
 
 @app.get("/")
 def root():
     return {"message": "Hellow World"}
-
-
-
+    
 if __name__ == "__main__":
     uvicorn.run("__main__:app", host="127.0.0.1", reload=True, port=8000)
 

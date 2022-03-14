@@ -15,7 +15,7 @@ router = APIRouter(
 def login(user_crentials:OAuth2PasswordRequestForm = Depends(), db:Session = Depends(database.get_db)):
 
     ##user_crentials contém os campos username e password, username é relativo a email no nosso caso
-    user = db.query(models.Users).filter(models.Users.email == user_crentials.username).first()
+    user = db.query(models.User).filter(models.User.email == user_crentials.username).first()
 
     if not user:
         raise HTTPException(

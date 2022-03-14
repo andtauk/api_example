@@ -1,13 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from typing import List as ListType, Optional
 
+from sqlalchemy import func
+
 try:
-    from .. import models, schemas, oauth2
-    from ..schemas import PostBase, PostCreate, Post
+    from .. import models, oauth2
+    from ..schemas import PostCreate, Post, PostVotes
     from ..database import get_db, SessionLocal
 except:
-  import models, schemas, oauth2
-  from schemas import PostBase, PostCreate, Post
+  import models, oauth2
+  from schemas import PostCreate, Post, PostVotes
   from database import get_db, SessionLocal
 
 router = APIRouter(
@@ -17,7 +19,7 @@ router = APIRouter(
 
 
 # recuperar todos os posts
-@router.get("/", response_model=ListType[Post])
+@router.get("/", response_model=ListType[PostVotes])
 def root(
     db: SessionLocal = Depends(get_db),
     current_user: int = Depends(oauth2.get_current_user),
@@ -30,8 +32,18 @@ def root(
     # FROM posts
     # """)
     # posts = cursor.fetchall()
-    posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
-    return posts
+    # posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
+    results = db.query(
+        models.Post, func.count(models.Vote.post_id).label("votes")
+        ).join(
+        models.Vote, models.Vote.post_id == models.Post.id, isouter=True
+        ).group_by(
+            models.Post.id
+        ).filter(
+            models.Post.title.contains(search)
+        ).limit(limit).offset(skip).all()
+
+    return results
 
 
 # acrescentar um novo post
@@ -58,7 +70,7 @@ def create_post(post: PostCreate, db: SessionLocal = Depends(get_db), current_us
 
 
 # recuperar um post especifico
-@router.get("/{id}", response_model=Post)
+@router.get("/{id}", response_model=PostVotes)
 # posso passar esse id como str que o fastapi vai converter para inteiro
 def get_post(id: int, db: SessionLocal = Depends(get_db)):
     # cursor.execute(
@@ -70,7 +82,14 @@ def get_post(id: int, db: SessionLocal = Depends(get_db)):
     #     (str(id),))
     # post = cursor.fetchone()
 
-    post = db.query(models.Post).filter(models.Post.id == id).first()
+    post = db.query(
+        models.Post, func.count(models.Vote.post_id).label("votes")
+        ).join(
+        models.Vote, models.Vote.post_id == models.Post.id, isouter=True
+        ).group_by(
+            models.Post.id
+        ).filter(models.Post.id == id).first()
+        
     if not post:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Post not found"

@@ -1,4 +1,3 @@
-from hashlib import algorithms_available
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from fastapi import Depends, HTTPException, status
@@ -7,14 +6,16 @@ from sqlalchemy.orm import Session
 
 try:
   from . import database, models, schemas
+  from .config import settings
 except:
   import database, models, schemas
+  from config import settings
 
 OAuth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
-ALGORITHM = "HS256"
-SECRET_KEY = "2kdnj385pmbvb48se2"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ALGORITHM = settings.algorithm
+SECRET_KEY = settings.secret_key
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.access_token_expire_minutes
 
 #access token function
 def create_access_token(data: dict):
@@ -55,7 +56,7 @@ def get_current_user(token: str = Depends(OAuth2_scheme), db: Session = Depends(
 
   token_data = verify_access_token(token, credentials_exception)
   print(token_data.id)
-  user = db.query(models.Users).filter(models.Users.id == token_data.id).first()
+  user = db.query(models.User).filter(models.User.id == token_data.id).first()
 
   return user
   
