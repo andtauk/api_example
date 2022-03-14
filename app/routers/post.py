@@ -3,14 +3,14 @@ from typing import List as ListType, Optional
 
 from sqlalchemy import func
 
-try:
-    from .. import models, oauth2
-    from ..schemas import PostCreate, Post, PostVotes
-    from ..database import get_db, SessionLocal
-except:
-  import models, oauth2
-  from schemas import PostCreate, Post, PostVotes
-  from database import get_db, SessionLocal
+# try:
+from .. import models, oauth2
+from ..schemas import PostCreate, Post, PostVotes
+from ..database import get_db, SessionLocal
+# except:
+#   import models, oauth2
+#   from schemas import PostCreate, Post, PostVotes
+#   from database import get_db, SessionLocal
 
 router = APIRouter(
     prefix="/posts",

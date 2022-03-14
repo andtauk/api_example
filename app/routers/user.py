@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List as ListType
 
-try:
-    from .. import models, schemas, database, utils
-except:
-    import database, utils, models, schemas
+# try:
+from .. import models, schemas, database, utils
+# except:
+#     import database, utils, models, schemas
 
 router = APIRouter(
     prefix="/users",

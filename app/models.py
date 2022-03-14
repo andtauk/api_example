@@ -4,10 +4,10 @@ from sqlalchemy.sql.expression import text
 from distutils import extension
 from sympy import content
 
-try:
-    from .database import Base
-except:
-    from database import Base
+# try:
+from .database import Base
+# except:
+#     from database import Base
 
 
 class Post(Base):

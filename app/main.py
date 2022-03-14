@@ -4,17 +4,17 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 
-try:
-    from .database import engine
-    from . import models
-    from .routers import post, user, auth, vote
-    from .config import settings
+# try:
+from .database import engine
+from . import models
+from .routers import post, user, auth, vote
+from .config import settings
     
-except:
-    from database import engine
-    import models
-    from routers import post, user, auth, vote
-    from config import settings
+# except:
+#     from database import engine
+#     import models
+#     from routers import post, user, auth, vote
+#     from config import settings
 
 settings
     
@@ -41,7 +41,7 @@ app.include_router(vote.router)
 @app.get("/")
 def root():
     return {"message": "Hellow"}
-    
+
 if __name__ == "__main__":
     uvicorn.run("__main__:app", host="127.0.0.1", reload=True, port=8000)
 

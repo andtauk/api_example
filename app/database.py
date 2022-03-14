@@ -2,10 +2,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-try:
-    from .config import settings
-except:
-    from config import settings
+# try:
+from .config import settings
+# except:
+#     from config import settings
 
 # import psycopg2
 # from psycopg2.extras import RealDictCursor

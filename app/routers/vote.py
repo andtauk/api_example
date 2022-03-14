@@ -3,10 +3,10 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sympy import re
 
 
-try:
-  from . import schemas, models, utils, database, oauth2
-except:
-  import schemas, models, utils, database, oauth2
+# try:
+from .. import schemas, models, utils, database, oauth2
+# except:
+#   import schemas, models, utils, database, oauth2
 
 router = APIRouter(
     prefix="/vote",
