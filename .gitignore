@@ -3,3 +3,5 @@ __pycache__
 fast_API.py-jvsc-6ae712e6-7653-42ac-b952-445132c5c9ab.ipynb
 .vscode
 .env
+heroku info.txt
+venv
