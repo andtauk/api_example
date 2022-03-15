@@ -3,6 +3,10 @@ from datetime import datetime, timedelta
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
+import time
+
+from fastapi import Request, HTTPException
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 # try:
 from . import database, models, schemas
@@ -11,7 +15,32 @@ from .config import settings
 #   import database, models, schemas
 #   from config import settings
 
-OAuth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+class JWTBearer(HTTPBearer):
+    def __init__(self, auto_error: bool = True):
+        super(JWTBearer, self).__init__(auto_error=auto_error)
+
+    async def __call__(self, request: Request):
+      credentials : HTTPAuthorizationCredentials = await super(JWTBearer, self).__call__(request)
+      if credentials:
+        if not credentials.scheme == "Bearer":
+          raise HTTPException(status_code=403, detail="Invalid or expired token scheme")
+        return credentials.credentials
+      else:
+        raise HTTPException(status_code=403, detail="Invalid or expired token")
+    
+    def verify_jwt(self, jwtoken: str):
+      isTokenValid:bool = False
+      payload = decodeJWT(jwtoken)
+      if payload:
+        isTokenValid = True
+      return isTokenValid
+
+
+
+      
+
+OAuth2_scheme = JWTBearer()
+# OAuth2PasswordBearer(tokenUrl="login")
 
 ALGORITHM = settings.algorithm
 SECRET_KEY = settings.secret_key
@@ -59,4 +88,11 @@ def get_current_user(token: str = Depends(OAuth2_scheme), db: Session = Depends(
   user = db.query(models.User).filter(models.User.id == token_data.id).first()
 
   return user
+
+def decodeJWT(token: str):
+  try:
+    decoded_token = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
+    return decoded_token if decoded_token["exp"] > time.time() else None
+  except JWTError:
+    return {"message": "Invalid token"}
   

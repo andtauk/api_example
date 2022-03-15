@@ -2,7 +2,6 @@ from multiprocessing import synchronize
 from fastapi import APIRouter, Depends, HTTPException, status
 from sympy import re
 
-
 # try:
 from .. import schemas, models, utils, database, oauth2
 # except:

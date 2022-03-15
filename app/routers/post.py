@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from typing import List as ListType, Optional
-
 from sqlalchemy import func
 
 # try:
 from .. import models, oauth2
 from ..schemas import PostCreate, Post, PostVotes
 from ..database import get_db, SessionLocal
+from ..oauth2 import JWTBearer
 # except:
 #   import models, oauth2
 #   from schemas import PostCreate, Post, PostVotes
