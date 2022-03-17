@@ -14,10 +14,7 @@ from .config import settings
 #     from database import engine
 #     import models
 #     from routers import post, user, auth, vote
-#     from config import settings
-
-settings
-    
+#     from config import settings    
 
 # models.Base.metadata.create_all(bind=engine)
 
@@ -40,9 +37,9 @@ app.include_router(vote.router)
 
 @app.get("/")
 def root():
-    return {"message": "Hellow"}
+    return {"message": "Hello 13:24 tutorial"}
 
-if __name__ == "__main__":
-    uvicorn.run("__main__:app", host="127.0.0.1", reload=True, port=8000)
+# if __name__ == "__main__":
+#     uvicorn.run("__main__:app", host="127.0.0.1", reload=True, port=8000)
 
     
