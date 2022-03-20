@@ -12,4 +12,6 @@ jobs:
           python-version: '3.8' # Version range or exact version of a Python version to use, using SemVer's version range syntax
       - name: update pip
         run: python -m install --upgrade pip
-      - name: pip install -r requirements.txt
+      - name: install dependencies
+        run: pip install -r requirements.txt
+
