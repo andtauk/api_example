@@ -30,6 +30,7 @@ class UserOut (BaseModel):
     name: str
     email: EmailStr
     id: int
+    created_at: datetime
 
     class Config:
         orm_mode = True

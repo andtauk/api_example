@@ -11,9 +11,9 @@ router = APIRouter(
     tags=["users"],
     )
 
-# acrescentar um novo post
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut, )
-def create_post(user: schemas.UserCreate, db: database.SessionLocal = Depends(database.get_db)):
+# acrescentar um novo user
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
+def create_user(user: schemas.UserCreate, db: database.SessionLocal = Depends(database.get_db)):
 
     user_password = utils.hash_password(user.password)
     user.password = user_password
@@ -25,13 +25,14 @@ def create_post(user: schemas.UserCreate, db: database.SessionLocal = Depends(da
 
     return new_user
 
-# recuperar todos os posts
+# recuperar todos os users
 @router.get("/", response_model=ListType[schemas.UserOut])
 def root(db: database.SessionLocal = Depends(database.get_db)):
     users = db.query(models.User).all()
     return users
 
 
+#recuperar um user específico
 @router.get('/{id}', response_model=schemas.UserOut)
 def get_user(id: int, db: database.SessionLocal = Depends(database.get_db)):
 

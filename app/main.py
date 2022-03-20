@@ -1,14 +1,7 @@
-from multiprocessing import allow_connection_pickling
-import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-
-# try:
-from .database import engine
-from . import models
 from .routers import post, user, auth, vote
-from .config import settings
+
     
 # except:
 #     from database import engine
@@ -37,7 +30,7 @@ app.include_router(vote.router)
 
 @app.get("/")
 def root():
-    return {"message": "Hello 13:24 tutorial"}
+    return {"message": "Hello World"}
 
 # if __name__ == "__main__":
 #     uvicorn.run("__main__:app", host="127.0.0.1", reload=True, port=8000)

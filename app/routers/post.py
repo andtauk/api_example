@@ -42,6 +42,11 @@ def root(
         ).filter(
             models.Post.title.contains(search)
         ).limit(limit).offset(skip).all()
+    
+    if current_user.id  == None:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="user without permission"
+        )
 
     return results
 
@@ -72,7 +77,7 @@ def create_post(post: PostCreate, db: SessionLocal = Depends(get_db), current_us
 # recuperar um post especifico
 @router.get("/{id}", response_model=PostVotes)
 # posso passar esse id como str que o fastapi vai converter para inteiro
-def get_post(id: int, db: SessionLocal = Depends(get_db)):
+def get_post(id: int, db: SessionLocal = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     # cursor.execute(
     #     """
     #     SELECT *
@@ -93,6 +98,11 @@ def get_post(id: int, db: SessionLocal = Depends(get_db)):
     if not post:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Post not found"
+        )
+    
+    if current_user.id == None:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="user without permission"
         )
     return post
 
