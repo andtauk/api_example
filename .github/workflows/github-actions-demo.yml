@@ -2,6 +2,15 @@ name: GitHub Actions Demo
 on: [push, pull_request]
 jobs:
   Job1:
+    env:
+      DATABASE_HOSTNAME: localhost
+      DATABASE_PORT: 5432
+      DATABASE_NAME: fast_api
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: postgres
+      SECRET_KEY: 2kdnj385pmbvb48se2
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 720
     runs-on: ubuntu-18.04
     steps:
       - name: pulling git git repo
