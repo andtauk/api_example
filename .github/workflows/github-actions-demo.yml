@@ -103,5 +103,4 @@ jobs:
           script: |
             cd app/src
             git pull
-            echo ${{secrets.PROD_PASSWORD}} | sudo -S systemctl start gunicorn
-            
+            echo ${{secrets.PROD_PASSWORD}} | sudo -S systemctl start gunicorn            
