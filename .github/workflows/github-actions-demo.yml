@@ -20,11 +20,11 @@ jobs:
           POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 60s
-          --health-timeout 30s
-          --health-retries 10
+        # options: >-
+        #   --health-cmd pg_isready
+        #   --health-interval 60s
+        #   --health-timeout 30s
+        #   --health-retries 10
 
     #   postgres:
     #     image: postgres:14
@@ -39,7 +39,7 @@ jobs:
     #       --health-timeout 5s
     #       --health-retries 5
 
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: pulling git git repo
         uses: actions/checkout@v3
