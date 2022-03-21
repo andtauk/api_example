@@ -1,13 +1,17 @@
-name: GitHub Actions Demo
+name: Build and Deploy Code
+
 on: [push, pull_request]
+
 jobs:
-  Job1:
+  build:
+    environment:
+      name: testing
     env:
       DATABASE_HOSTNAME: ${{secrets.DATABASE_HOSTNAME}}
       DATABASE_PORT: ${{secrets.DATABASE_PORT}}
-      DATABASE_NAME: ${{secrets.DATABASE_NAME}}
-      DATABASE_USERNAME: ${secrets.DATABASE_USERNAME}}
       DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+      DATABASE_NAME: ${{secrets.DATABASE_NAME}}
+      DATABASE_USERNAME: ${{secrets.DATABASE_USERNAME}}
       SECRET_KEY: ${{secrets.SECRET_KEY}}
       ALGORITHM: ${{secrets.ALGORITHM}}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}}
@@ -16,65 +20,133 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_DB: postgres:postgres@localhost:5432/fast_api_test
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+          POSTGRES_DB: ${{secrets.DATABASE_NAME}}_test
         ports:
           - 5432:5432
-        # options: >-
-        #   --health-cmd pg_isready
-        #   --health-interval 60s
-        #   --health-timeout 30s
-        #   --health-retries 10
-
-    #   postgres:
-    #     image: postgres:14
-    #     env:
-    #       POSTGRES_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
-    #       POSTGRES_DB: ${{secrets.DATABASE_NAME}}_test
-    #     ports:
-    #       - 5432:5432
-    #     options: >-
-    #       --health-cmd pg_isready
-    #       --health-interval 10s
-    #       --health-timeout 5s
-    #       --health-retries 5
-
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     runs-on: ubuntu-latest
     steps:
-      - name: pulling git git repo
-        uses: actions/checkout@v3
-      - name: install python
-        uses: actions/setup-python@v3
+      - name: pulling git repo
+        uses: actions/checkout@v2
+      - name: Install python version 3.9
+        uses: actions/setup-python@v2
         with:
-          python-version: "3.8" # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          python-version: "3.9"
       - name: update pip
         run: python -m pip install --upgrade pip
-      - name: install pre-requirements
-        run: pip install setuptools
-      - name: install dependencies
+      - name: install all dependencies
         run: pip install -r requirements.txt
-      - name: run tests
+      - name: test with pytest
         run: |
           pip install pytest
           pytest
-
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: Set up Docker Hub
+      - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
 
       - name: Build and push
+        id: docker_build
         uses: docker/build-push-action@v2
         with:
           context: ./
           file: ./Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/fast_api:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/fastapi:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+
+# name: GitHub Actions Demo
+# on: [push, pull_request]
+# jobs:
+#   Job1:
+#     env:
+#       DATABASE_HOSTNAME: ${{secrets.DATABASE_HOSTNAME}}
+#       DATABASE_PORT: ${{secrets.DATABASE_PORT}}
+#       DATABASE_NAME: ${{secrets.DATABASE_NAME}}
+#       DATABASE_USERNAME: ${secrets.DATABASE_USERNAME}}
+#       DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+#       SECRET_KEY: ${{secrets.SECRET_KEY}}
+#       ALGORITHM: ${{secrets.ALGORITHM}}
+#       ACCESS_TOKEN_EXPIRE_MINUTES: ${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}}
+
+#     services:
+#       postgres:
+#         image: postgres
+#         env:
+#           POSTGRES_DB: postgres:postgres@localhost:5432/fast_api_test
+#           POSTGRES_PASSWORD: postgres
+#         ports:
+#           - 5432:5432
+#         # options: >-
+#         #   --health-cmd pg_isready
+#         #   --health-interval 60s
+#         #   --health-timeout 30s
+#         #   --health-retries 10
+
+#     #   postgres:
+#     #     image: postgres:14
+#     #     env:
+#     #       POSTGRES_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+#     #       POSTGRES_DB: ${{secrets.DATABASE_NAME}}_test
+#     #     ports:
+#     #       - 5432:5432
+#     #     options: >-
+#     #       --health-cmd pg_isready
+#     #       --health-interval 10s
+#     #       --health-timeout 5s
+#     #       --health-retries 5
+
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: pulling git git repo
+#         uses: actions/checkout@v3
+#       - name: install python
+#         uses: actions/setup-python@v3
+#         with:
+#           python-version: "3.8" # Version range or exact version of a Python version to use, using SemVer's version range syntax
+#       - name: update pip
+#         run: python -m pip install --upgrade pip
+#       - name: install pre-requirements
+#         run: pip install setuptools
+#       - name: install dependencies
+#         run: pip install -r requirements.txt
+#       - name: run tests
+#         run: |
+#           pip install pytest
+#           pytest
+
+#       - name: Login to Docker Hub
+#         uses: docker/login-action@v1
+#         with:
+#           username: ${{ secrets.DOCKER_HUB_USERNAME }}
+#           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+#       - name: Set up Docker Hub
+#         id: buildx
+#         uses: docker/setup-buildx-action@v1
+
+#       - name: Build and push
+#         uses: docker/build-push-action@v2
+#         with:
+#           context: ./
+#           file: ./Dockerfile
+#           builder: ${{ steps.buildx.outputs.name }}
+#           push: true
+#           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/fast_api:latest
+#           cache-from: type=local,src=/tmp/.buildx-cache
+#           cache-to: type=local,dest=/tmp/.buildx-cache
