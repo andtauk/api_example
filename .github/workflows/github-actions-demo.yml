@@ -98,7 +98,7 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{secrets.PROD_HOST}}
-          username: ${{secrets.PROD_PASSWORD}}
+          username: ${{secrets.PROD_USERNAME}}
           script: |
             cd app/src
             git pull
